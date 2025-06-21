@@ -1,10 +1,14 @@
-from flask import Flask, render_template, request
-import cohere
 import os
+from flask import Flask, render_template
+from flask import request
+import cohere
 from dotenv import load_dotenv
 
 load_dotenv()
-app = Flask(__name__)
+
+# Tell Flask to use the current directory (root) for templates
+template_dir = os.path.abspath('.')
+app = Flask(__name__, template_folder=template_dir)
 
 COHERE_API_KEY = os.getenv("COHERE_API_KEY")
 co = cohere.Client(COHERE_API_KEY)
@@ -39,7 +43,7 @@ def index():
             cultural_note = f"Error calling Cohere API: {str(e)}"
 
     return render_template("index.html", note=cultural_note, input_text=user_input)
+
 if __name__ == "__main__":
     print("Starting Flask app...")
     app.run(debug=True)
-
